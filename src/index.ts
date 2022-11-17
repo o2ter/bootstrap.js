@@ -27,84 +27,12 @@ import _ from 'lodash';
 import sass from 'sass';
 import { bootstrap } from './bootstrap';
 
-const defaultThemeColors = [
-  'primary',
-  'secondary',
-  'success',
-  'info',
-  'warning',
-  'error',
-  'danger',
-  'light',
-  'dark',
-];
-
-const defaultBreakpoints = {
-  xs: '0',
-  sm: '576px',
-  md: '768px',
-  lg: '992px',
-  xl: '1200px',
-  xxl: '1400px',
-};
-
-const defaultStyles = {
-  white: '#fff',
-  'gray-100': '#f8f9fa',
-  'gray-200': '#e9ecef',
-  'gray-300': '#dee2e6',
-  'gray-400': '#ced4da',
-  'gray-500': '#adb5bd',
-  'gray-600': '#6c757d',
-  'gray-700': '#495057',
-  'gray-800': '#343a40',
-  'gray-900': '#212529',
-  black: '#000',
-
-  blue: '#0d6efd',
-  indigo: '#6610f2',
-  purple: '#6f42c1',
-  pink: '#d63384',
-  red: '#dc3545',
-  orange: '#fd7e14',
-  yellow: '#ffc107',
-  green: '#198754',
-  teal: '#20c997',
-  cyan: '#0dcaf0',
-
-  primary: '#0d6efd',
-  secondary: '#6c757d',
-  success: '#198754',
-  info: '#0dcaf0',
-  warning: '#ffc107',
-  error: '#dc3545',
-  danger: '#dc3545',
-  light: '#f8f9fa',
-  dark: '#212529',
-
-  'min-contrast-ratio': '4.5',
-
-  'color-contrast-dark': '#000',
-  'color-contrast-light': '#fff',
-
-  'spacer': '1rem',
-
-  'theme-colors': `(
-    ${_.map(defaultThemeColors, (color) => `"${color}": $${color},`).join('\n')}
-  )`,
-
-  'grid-breakpoints': `(
-    ${_.map(defaultBreakpoints, (value, key) => `${key}: ${value},`).join('\n')}
-  )`,
-}
-
 export const cssString = async (
   styles: Record<string, string> = {},
 ) => {
 
-  const _style = _.assign({}, defaultStyles, styles);
   const source = `
-    ${_.map(_style, (value, key) => `$${key}: ${value};`).join('\n')}
+    ${_.map(styles, (value, key) => `$${key}: ${value};`).join('\n')}
     @import "bootstrap";
   `;
 
