@@ -27,6 +27,27 @@ import _ from 'lodash';
 import sass from 'sass';
 import { bootstrap } from './bootstrap';
 
+const defaultThemeColors = [
+  'primary',
+  'secondary',
+  'success',
+  'info',
+  'warning',
+  'error',
+  'danger',
+  'light',
+  'dark',
+];
+
+const defaultBreakpoints = {
+  xs: '0',
+  sm: '576px',
+  md: '768px',
+  lg: '992px',
+  xl: '1200px',
+  xxl: '1400px',
+};
+
 const defaultStyles = {
   white: '#fff',
   'gray-100': '#f8f9fa',
@@ -67,46 +88,23 @@ const defaultStyles = {
   'color-contrast-light': '#fff',
 
   'spacer': '1rem',
+
+  'theme-colors': `(
+    ${_.map(defaultThemeColors, (color) => `"${color}": $${color},`).join('\n')}
+  )`,
+
+  'grid-breakpoints': `(
+    ${_.map(defaultBreakpoints, (value, key) => `${key}: ${value},`).join('\n')}
+  )`,
 }
 
-const defaultThemeColors = [
-  'primary',
-  'secondary',
-  'success',
-  'info',
-  'warning',
-  'error',
-  'danger',
-  'light',
-  'dark',
-];
-
-const defaultBreakpoints = {
-  xs: '0',
-  sm: '576px',
-  md: '768px',
-  lg: '992px',
-  xl: '1200px',
-  xxl: '1400px',
-};
-
-type CustomStyles = Partial<typeof defaultStyles>;
-
 export const cssString = async (
-  styles: CustomStyles = {},
-  themeColors: string[] = defaultThemeColors,
-  breakpoints: Record<string, string> = defaultBreakpoints,
+  styles: Record<string, string> = {},
 ) => {
 
   const _style = _.assign({}, defaultStyles, styles);
   const source = `
     ${_.map(_style, (value, key) => `$${key}: ${value};`).join('\n')}
-    $theme-colors: (
-      ${_.map(themeColors, (color) => `"${color}": $${color},`).join('\n')}
-    );
-    $grid-breakpoints: (
-      ${_.map(breakpoints, (value, key) => `${key}: ${value},`).join('\n')}
-    );
     @import "bootstrap";
   `;
 
