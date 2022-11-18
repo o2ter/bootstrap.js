@@ -33,7 +33,7 @@ export default [
   {
     input: `src/index`,
     external: [
-      /node_modules/
+      /node_modules\/(?!sass)/
     ],
     output: [
       {
