@@ -28,8 +28,8 @@ import sass from 'sass';
 import { bootstrap } from './bootstrap';
 
 const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>>(
-  styles: Record<string, string> = {},
-  logger: sass.Logger = sass.Logger.silent,
+  styles: Record<string, string>,
+  logger: sass.Logger,
   compiler: (
     source: string, 
     options?: sass.StringOptions<Result extends Promise<sass.CompileResult> ? "async" : "sync">
