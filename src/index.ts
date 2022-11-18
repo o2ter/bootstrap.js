@@ -28,7 +28,7 @@ import sass from 'sass';
 import { bootstrap } from './bootstrap';
 
 const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>>(
-  styles: Record<string, string>,
+  styles: Record<string, string | number>,
   logger: sass.Logger,
   compiler: (
     source: string, 
@@ -65,14 +65,14 @@ const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>
 }
 
 export const compileString = (
-  styles: Record<string, string> = {},
+  styles: Record<string, string | number> = {},
   logger: sass.Logger = sass.Logger.silent,
 ) => {
   return compile(styles, logger, sass.compileString).css.toString();
 }
 
 export const compileStringAsync = async (
-  styles: Record<string, string> = {},
+  styles: Record<string, string | number> = {},
   logger: sass.Logger = sass.Logger.silent,
 ) => {
   const result = await compile(styles, logger, sass.compileStringAsync);
