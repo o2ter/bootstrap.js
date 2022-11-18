@@ -43,6 +43,7 @@ const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>
 
   return compiler(source, {
     logger,
+    alertColor: false,
     url: new URL('file://'),
     importer: {
       canonicalize(url) { return new URL(url); },
