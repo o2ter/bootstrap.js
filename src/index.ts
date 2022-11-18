@@ -27,9 +27,13 @@ import _ from 'lodash';
 import sass from 'sass';
 import { bootstrap } from './bootstrap';
 
-export const cssString = async (
+const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>>(
   styles: Record<string, string> = {},
   logger: sass.Logger = sass.Logger.silent,
+  compiler: (
+    source: string, 
+    options?: sass.StringOptions<Result extends Promise<sass.CompileResult> ? "async" : "sync">
+  ) => Result
 ) => {
 
   const source = `
@@ -37,7 +41,7 @@ export const cssString = async (
     @import "bootstrap";
   `;
 
-  const result = await sass.compileStringAsync(source, {
+  return compiler(source, {
     logger,
     url: new URL('file://'),
     importer: {
@@ -58,8 +62,19 @@ export const cssString = async (
       },
     },
   });
-
-  return result.css.toString();
 }
 
-export default cssString;
+export const compileString = (
+  styles: Record<string, string> = {},
+  logger: sass.Logger = sass.Logger.silent,
+) => {
+  return compile(styles, logger, sass.compileString).css.toString();
+}
+
+export const compileStringAsync = async (
+  styles: Record<string, string> = {},
+  logger: sass.Logger = sass.Logger.silent,
+) => {
+  const result = await compile(styles, logger, sass.compileStringAsync);
+  return result.css.toString();
+}
