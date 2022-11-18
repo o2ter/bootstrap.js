@@ -29,6 +29,7 @@ import { bootstrap } from './bootstrap';
 
 export const cssString = async (
   styles: Record<string, string> = {},
+  logger: sass.Logger = sass.Logger.silent,
 ) => {
 
   const source = `
@@ -37,6 +38,7 @@ export const cssString = async (
   `;
 
   const result = await sass.compileStringAsync(source, {
+    logger,
     url: new URL('file://'),
     importer: {
       canonicalize(url) { return new URL(url); },
