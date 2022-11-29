@@ -26,14 +26,12 @@
 import _ from 'lodash';
 import sass from 'sass';
 import { bootstrap } from './bootstrap';
+import autoprefixer from 'autoprefixer';
+import postcss from 'postcss';
 
-const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>>(
+const compile = async (
   styles: Record<string, string | number>,
   logger: sass.Logger,
-  compiler: (
-    source: string, 
-    options?: sass.StringOptions<Result extends Promise<sass.CompileResult> ? "async" : "sync">
-  ) => Result
 ) => {
 
   const source = `
@@ -41,7 +39,7 @@ const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>
     @import "bootstrap";
   `;
 
-  return compiler(source, {
+  const result = await sass.compileStringAsync(source, {
     logger,
     url: new URL('file://'),
     importer: {
@@ -62,19 +60,24 @@ const compile = <Result extends sass.CompileResult | Promise<sass.CompileResult>
       },
     },
   });
-}
 
-export const compileString = (
-  styles: Record<string, string | number> = {},
-  logger: sass.Logger = sass.Logger.silent,
-) => {
-  return compile(styles, logger, sass.compileString).css.toString();
-}
-
-export const compileStringAsync = async (
-  styles: Record<string, string | number> = {},
-  logger: sass.Logger = sass.Logger.silent,
-) => {
-  const result = await compile(styles, logger, sass.compileStringAsync);
   return result.css.toString();
+}
+
+const prefixer = async (css: string, logger: sass.Logger) => {
+  const result = await postcss([autoprefixer()]).process(css);
+  if (_.isFunction(logger?.warn)) {
+    for (const warning of result.warnings()) {
+      logger.warn(warning.toString());
+    }
+  }
+  return result.css;
+}
+
+export const compileString = async (
+  styles: Record<string, string | number> = {},
+  logger: sass.Logger = sass.Logger.silent,
+) => {
+  const result = await compile(styles, logger);
+  return prefixer(result, logger);
 }

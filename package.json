@@ -12,8 +12,10 @@
     "rollup": "yarn clean && rollup -c"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.13",
     "bootstrap": "^5.2.2",
     "lodash": "^4.17.21",
+    "postcss": "^8.4.19",
     "sass": "^1.56.1"
   },
   "devDependencies": {
