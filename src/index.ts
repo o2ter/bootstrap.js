@@ -30,7 +30,7 @@ import autoprefixer from 'autoprefixer';
 import postcss from 'postcss';
 
 const compile = async (
-  styles: Record<string, string | number>,
+  styles: Record<string, string | number | boolean>,
   logger: sass.Logger,
 ) => {
 
@@ -68,14 +68,14 @@ const prefixer = async (css: string, logger: sass.Logger) => {
   const result = await postcss([autoprefixer()]).process(css);
   if (_.isFunction(logger?.warn)) {
     for (const warning of result.warnings()) {
-      logger.warn(warning.toString());
+      logger.warn(warning.toString(), { deprecation: false });
     }
   }
   return result.css;
 }
 
 export const compileString = async (
-  styles: Record<string, string | number> = {},
+  styles: Record<string, string | number | boolean> = {},
   logger: sass.Logger = sass.Logger.silent,
 ) => {
   const result = await compile(styles, logger);
