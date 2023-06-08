@@ -24,14 +24,14 @@
 //
 
 import _ from 'lodash';
-import sass from 'sass';
+import { Logger, compileStringAsync } from 'sass';
 import { bootstrap } from './bootstrap';
 import autoprefixer from 'autoprefixer';
 import postcss from 'postcss';
 
 const compile = async (
   styles: Record<string, string | number | boolean>,
-  logger: sass.Logger,
+  logger: Logger,
 ) => {
 
   const source = `
@@ -39,7 +39,7 @@ const compile = async (
     @import "bootstrap";
   `;
 
-  const result = await sass.compileStringAsync(source, {
+  const result = await compileStringAsync(source, {
     logger,
     url: new URL('file://'),
     importer: {
@@ -64,7 +64,7 @@ const compile = async (
   return result.css.toString();
 }
 
-const prefixer = async (css: string, logger: sass.Logger) => {
+const prefixer = async (css: string, logger: Logger) => {
   const result = await postcss([autoprefixer()]).process(css);
   if (_.isFunction(logger?.warn)) {
     for (const warning of result.warnings()) {
@@ -76,7 +76,7 @@ const prefixer = async (css: string, logger: sass.Logger) => {
 
 export const compileString = async (
   styles: Record<string, string | number | boolean> = {},
-  logger: sass.Logger = sass.Logger.silent,
+  logger: Logger = Logger.silent,
 ) => {
   const result = await compile(styles, logger);
   return prefixer(result, logger);
