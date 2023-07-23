@@ -17,7 +17,7 @@ function readdir(dir) {
 }
 
 const rollupPlugins = [
-  typescript(),
+  typescript({ declaration: false }),
   babel({
     babelrc: false,
     exclude: 'node_modules/**',
